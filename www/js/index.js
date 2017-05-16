@@ -70,6 +70,7 @@ function onDeviceReady () {
 	$('#info').append(device.model + '<br>');
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
+	//takePicture();
 }
 
 function takePicture () {
@@ -82,6 +83,6 @@ function takePicture () {
 	}
 	
 	function onFail (message) {
-		cosole.log("image capture failed because " + message);
+		console.log("image capture failed because " + message);
 	}
 }
