@@ -65,17 +65,14 @@ function onDeviceReady () {
 	
 	listeningElement.setAttribute('style', 'display:none');
 	receivedElement.setAttribute('style', 'display:block');
-	console.log('Received Event: whyyyyyy');
-	
-	//device ***************************************************************************************************
-	
-	alert("MMEMEMEME");
+
 	$('#info').html('Cordova Version: ' + device.cordova +'<br>');
 	$('#info').append(device.model + '<br>');
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
-	console.log('Received Event: whyyyyyy');
 	
-	//camera ***************************************************************************************************
+}
+
+function takePicture () {
 	navigator.camera.getPicture(onSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.DATA_URL})
 	
 	function onSuccess(imageData) {
@@ -85,6 +82,6 @@ function onDeviceReady () {
 	}
 	
 	function onFail (message) {
-		//cosole.log("failed because " + message);
+		cosole.log("image capture failed because " + message);
 	}
 }
