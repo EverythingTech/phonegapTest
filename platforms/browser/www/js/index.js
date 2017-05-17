@@ -34,22 +34,39 @@ function onDeviceReady () {
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
 	//takePicture();
-	
-	navigator.accelerometer.getCurrentAcceleration(onSuccess, onError);
+	var options = { frequency: 100 };  // Update every 100 ms
+	navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 	
 	function onSuccess(acceleration) {
 		document.getElementById('accX').innerHTML = "Acceleration X: " + acceleration.x;
 		document.getElementById('accY').innerHTML = "Acceleration Y: " + acceleration.y;
 		document.getElementById('accZ').innerHTML = "Acceleration Z: " + acceleration.z;
 		document.getElementById('timestamp').innerHTML = "Timestamp: " + acceleration.timestamp;
-    }
+    };
 	
 	function onError() {
         alert('Error!');
-    }
+    };
 
 }
+function vibrate(t){
+	navigator.vibrate(t);
+}
+function checkConnection() {
+    var networkState = navigator.connection.type;
 
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.CELL]     = 'Cell generic connection';
+    states[Connection.NONE]     = 'No network connection';
+
+    alert('Connection type: ' + states[networkState]);
+}
 function takePicture () {
 	navigator.camera.getPicture(onSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.DATA_URL})
 	
