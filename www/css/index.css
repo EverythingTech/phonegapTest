@@ -44,9 +44,10 @@ body {
     text-transform:uppercase;
     width:100%;
 }
+
 #myImage {
     width: 200px;
-    height: 150px;
+    height: 200px;
 }
 /* Portrait layout (default) */
 .app {
