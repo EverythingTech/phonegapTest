@@ -71,6 +71,19 @@ function onDeviceReady () {
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
 	//takePicture();
+	
+	navigator.accelerometer.getCurrentAcceleration(onSuccess, onError);
+	
+	function onSuccess(acceleration) {
+		document.getElementById('accX').innerHTML = "Acceleration X: " + acceleration.x;
+		document.getElementById('accY').innerHTML = "Acceleration Y: " + acceleration.y;
+		document.getElementById('accZ').innerHTML = "Acceleration Z: " + acceleration.z;
+		document.getElementById('timestamp').innerHTML = "Timestamp: " + acceleration.timestamp;
+    }
+	
+	function onError() {
+        alert('Error!');
+    }
 }
 
 function takePicture () {
