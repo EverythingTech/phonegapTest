@@ -34,6 +34,9 @@ function onDeviceReady () {
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
 	//takePicture();
+	gyro();
+}
+function gyro () {
 	var options = { frequency: 100 };  // Update every 100 ms
 	navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 	
@@ -45,9 +48,8 @@ function onDeviceReady () {
     };
 	
 	function onError() {
-        alert('Error!');
+        alert('Accelerometer Error!');
     };
-
 }
 function vibrate(t){
 	navigator.vibrate(t);
