@@ -34,10 +34,38 @@ function onDeviceReady () {
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
 	//takePicture();
-	gyro();
+	//gyro();
+	
+	
+	 window.addEventListener('deviceorientation', function(eventData) {
+	// gamma is the left-to-right tilt in degrees, where right is positive
+	var tiltLR = eventData.gamma;
+
+	// beta is the front-to-back tilt in degrees, where front is positive
+	var tiltFB = eventData.beta;
+
+	// alpha is the compass direction the device is facing in degrees
+	var dir = eventData.alpha
+
+	// deviceorientation does not provide this data
+	var motUD = null;
+
+	// call our orientation event handler
+	deviceOrientationHandler(tiltLR, tiltFB, dir, motUD);
+	}, false);
+	
+	document.getElementById('alpha').innerHTML = dir;
+	document.getElementById('beta').innerHTML = tiltFB;
+	document.getElementById('gamma').innerHTML = tiltLR;
+	
+	
+	
 }
-function gyro () {
-	var options = { frequency: 100 };  // Update every 100 ms
+
+
+
+/* function gyro () {
+	var options = { frequency: 3000 };  // Update every 100 ms
 	navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 	
 	function onSuccess(acceleration) {
@@ -50,7 +78,24 @@ function gyro () {
 	function onError() {
         alert('Accelerometer Error!');
     };
-}
+} */
+
+function gyro () {
+	var options = { frequency: 100 };  // Update every 100 ms
+	navigator.compass.watchHeading(onSuccess, onError, options);
+	
+	function onSuccess(heading) {
+		document.getElementById('gyro').innerHTML = "heading " + heading.magneticHeading;
+		//document.getElementById('accY').innerHTML = "Acceleration Y: " + Math.round(acceleration.y * 100) / 100;
+		//document.getElementById('accZ').innerHTML = "Acceleration Z: " + Math.round(acceleration.z * 100) / 100;
+		document.getElementById('timestamp').innerHTML = "Timestamp: " + heading.timestamp;
+    };
+	
+	function onError(error) {
+        alert('Accelerometer Error!' + error.code);
+    };
+} 
+
 function vibrate(t){
 	navigator.vibrate(t);
 }
