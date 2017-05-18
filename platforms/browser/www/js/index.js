@@ -38,9 +38,9 @@ function onDeviceReady () {
 	navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
 	
 	function onSuccess(acceleration) {
-		document.getElementById('accX').innerHTML = "Acceleration X: " + acceleration.x;
-		document.getElementById('accY').innerHTML = "Acceleration Y: " + acceleration.y;
-		document.getElementById('accZ').innerHTML = "Acceleration Z: " + acceleration.z;
+		document.getElementById('accX').innerHTML = "Acceleration X: " + Math.round(acceleration.x * 100) / 100;
+		document.getElementById('accY').innerHTML = "Acceleration Y: " + Math.round(acceleration.y * 100) / 100;
+		document.getElementById('accZ').innerHTML = "Acceleration Z: " + Math.round(acceleration.z * 100) / 100;
 		document.getElementById('timestamp').innerHTML = "Timestamp: " + acceleration.timestamp;
     };
 	
