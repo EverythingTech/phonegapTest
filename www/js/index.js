@@ -29,65 +29,25 @@ function onDeviceReady () {
 	listeningElement.setAttribute('style', 'display:none');
 	receivedElement.setAttribute('style', 'display:block');
 
+
 	$('#info').html('Cordova Version: ' + device.cordova +'<br>');
 	$('#info').append(device.model + '<br>');
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
-	//takePicture();
-	//gyro();
-	
-	
-	 window.addEventListener('deviceorientation', function(eventData) {
-	// gamma is the left-to-right tilt in degrees, where right is positive
-	var tiltLR = eventData.gamma;
-
-	// beta is the front-to-back tilt in degrees, where front is positive
-	var tiltFB = eventData.beta;
-
-	// alpha is the compass direction the device is facing in degrees
-	var dir = eventData.alpha
-
-	// deviceorientation does not provide this data
-	var motUD = null;
-
-	// call our orientation event handler
-	deviceOrientationHandler(tiltLR, tiltFB, dir, motUD);
-	}, false);
-	
-	document.getElementById('alpha').innerHTML = dir;
-	document.getElementById('beta').innerHTML = tiltFB;
-	document.getElementById('gamma').innerHTML = tiltLR;
-	
+	gyro();
 	
 	
 }
 
-
-
-/* function gyro () {
-	var options = { frequency: 3000 };  // Update every 100 ms
-	navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
-	
-	function onSuccess(acceleration) {
-		document.getElementById('accX').innerHTML = "Acceleration X: " + Math.round(acceleration.x * 100) / 100;
-		document.getElementById('accY').innerHTML = "Acceleration Y: " + Math.round(acceleration.y * 100) / 100;
-		document.getElementById('accZ').innerHTML = "Acceleration Z: " + Math.round(acceleration.z * 100) / 100;
-		document.getElementById('timestamp').innerHTML = "Timestamp: " + acceleration.timestamp;
-    };
-	
-	function onError() {
-        alert('Accelerometer Error!');
-    };
-} */
-
 function gyro () {
+	// The compass is a sensor that detects the direction or heading that the device is pointed, 
+	// typically from the top of the device. It measures the heading in degrees from 0 to 359.99, 
+	// where 0 is north.
 	var options = { frequency: 100 };  // Update every 100 ms
 	navigator.compass.watchHeading(onSuccess, onError, options);
 	
 	function onSuccess(heading) {
-		document.getElementById('gyro').innerHTML = "heading " + heading.magneticHeading;
-		//document.getElementById('accY').innerHTML = "Acceleration Y: " + Math.round(acceleration.y * 100) / 100;
-		//document.getElementById('accZ').innerHTML = "Acceleration Z: " + Math.round(acceleration.z * 100) / 100;
+		document.getElementById('heading').innerHTML = "heading " + heading.magneticHeading;
 		document.getElementById('timestamp').innerHTML = "Timestamp: " + heading.timestamp;
     };
 	
