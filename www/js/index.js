@@ -49,7 +49,10 @@ function gyro () {
 	function onSuccess(heading) {
 		document.getElementById('heading').innerHTML = "heading " + heading.magneticHeading;
 		document.getElementById('timestamp').innerHTML = "Timestamp: " + heading.timestamp;
+
+		document.getElementById('myImage').setAttribute('style', '-webkit-transform: rotate(' + (360 - heading.magneticHeading) + 'deg)');
     };
+
 	
 	function onError(error) {
         alert('Accelerometer Error!' + error.code);
