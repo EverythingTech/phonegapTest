@@ -34,7 +34,12 @@ function onDeviceReady () {
 	$('#info').append(device.model + '<br>');
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
-	gyro();
+	
+	
+	
+	tilt();
+	//gyro();
+	
 	
 	
 }
@@ -51,6 +56,8 @@ function gyro () {
 		document.getElementById('timestamp').innerHTML = "Timestamp: " + heading.timestamp;
 
 		document.getElementById('myImage').setAttribute('style', '-webkit-transform: rotate(' + (360 - heading.magneticHeading) + 'deg)');
+		
+			
     };
 
 	
@@ -58,6 +65,82 @@ function gyro () {
         alert('Accelerometer Error!' + error.code);
     };
 } 
+
+function tilt () {
+	function gyro () {
+		// The compass is a sensor that detects the direction or heading that the device is pointed, 
+		// typically from the top of the device. It measures the heading in degrees from 0 to 359.99, 
+		// where 0 is north.
+		var options = { frequency: 100 };  // Update every 100 ms
+		navigator.compass.watchHeading(onSuccess, onError, options);
+		
+		function onSuccess(heading) {
+			document.getElementById('heading').innerHTML = "heading " + heading.magneticHeading;
+			document.getElementById('timestamp').innerHTML = "Timestamp: " + heading.timestamp;
+
+			//document.getElementById('myImage').setAttribute('style', '-webkit-transform: rotate(' + (360 - heading.magneticHeading) + 'deg)');
+			
+				
+		};
+
+		
+		function onError(error) {
+			alert('Accelerometer Error!' + error.code);
+		};
+	} 
+	
+	if (window.DeviceOrientationEvent) {
+		
+		console.log("inside the stuff");
+		
+		//document.getElementById("doEvent").innerHTML = "DeviceOrientation";
+		// Listen for the deviceorientation event and handle the raw data
+		
+		
+		window.addEventListener('deviceorientation', function(eventData) {
+			// gamma is the left-to-right tilt in degrees, where right is positive
+			var tiltLR = eventData.gamma;
+
+			// beta is the front-to-back tilt in degrees, where front is positive
+			var tiltFB = eventData.beta;
+
+			// alpha is the compass direction the device is facing in degrees
+			var dir = eventData.alpha;
+
+			//console.log(dir);
+			
+			// call our orientation event handler
+			//deviceOrientationHandler(tiltLR, tiltFB, dir);
+			
+			
+			
+			//document.getElementById("doTiltLR").innerHTML = Math.round(tiltLR);
+
+
+			//console.log(tiltLR);
+			
+			//document.getElementById("doTiltFB").innerHTML = Math.round(tiltFB);
+			//document.getElementById("doDirection").innerHTML = Math.round(dir);
+
+			// Apply the transform to the image
+			var logo = document.getElementById("myImage");
+			logo.style.webkitTransform =
+			"rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
+			logo.style.MozTransform = "rotate("+ (360 - heading.magneticHeading) +"deg)";
+			logo.style.transform =
+			"rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
+				
+				
+					
+		}, false);
+	  
+	
+
+	} else {
+		document.getElementById("doEvent").innerHTML = "Not supported."
+	}
+	
+}
 
 function vibrate(t){
 	navigator.vibrate(t);
@@ -89,4 +172,9 @@ function takePicture () {
 	function onFail (message) {
 		console.log("image capture failed because " + message);
 	}
+}
+
+function revertImage () {
+	
+	
 }
