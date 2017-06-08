@@ -16,15 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- 
-var xAcceleration = 0;
-var yAcceleration = 0;
-
-var context;
-var x=100;
-var y=100;
-var dx=5;
-var dy=5;
 
 window.onload = function() {
 	document.addEventListener("deviceready", onDeviceReady, false);	
@@ -43,104 +34,59 @@ function onDeviceReady () {
 	$('#info').append(device.model + '<br>');
 	$('#info').append(device.platform+ ' ' + device.version + '<br>');
 	
-	//gyro();
+	gyro();
 	
-	
-	//context = myCanvas.getContext('2d');
-	//setInterval(draw,10);
-	
-	console.log("first one");
-	
-
-
-	
-	if (window.DeviceOrientationEvent) {
-		
-		console.log("inside the stuff");
-		
-		document.getElementById("doEvent").innerHTML = "DeviceOrientation";
-		// Listen for the deviceorientation event and handle the raw data
-		
-		
-		window.addEventListener('deviceorientation', function(eventData) {
-			// gamma is the left-to-right tilt in degrees, where right is positive
-			var tiltLR = eventData.gamma;
-
-			// beta is the front-to-back tilt in degrees, where front is positive
-			var tiltFB = eventData.beta;
-
-			// alpha is the compass direction the device is facing in degrees
-			var dir = eventData.alpha;
-
-			//console.log(dir);
-			
-			// call our orientation event handler
-			//deviceOrientationHandler(tiltLR, tiltFB, dir);
-			
-			
-			
-			document.getElementById("doTiltLR").innerHTML = Math.round(tiltLR);
-
-
-			console.log(tiltLR);
-			document.getElementById("doTiltFB").innerHTML = Math.round(tiltFB);
-			document.getElementById("doDirection").innerHTML = Math.round(dir);
-
-			// Apply the transform to the image
-			var logo = document.getElementById("imgLogo");
-			logo.style.webkitTransform =
-			"rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
-			logo.style.MozTransform = "rotate("+ tiltLR +"deg)";
-			logo.style.transform =
-			"rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
-				
-				
-					
-		}, false);
-	  
-	
-
-	} else {
-		document.getElementById("doEvent").innerHTML = "Not supported."
-	}
-
-
 	
 }
 
 function gyro () {
-	// this will keep track of the device's motion
+	// The compass is a sensor that detects the direction or heading that the device is pointed, 
+	// typically from the top of the device. It measures the heading in degrees from 0 to 359.99, 
+	// where 0 is north.
+	var options = { frequency: 100 };  // Update every 100 ms
+	navigator.compass.watchHeading(onSuccess, onError, options);
 	
+	function onSuccess(heading) {
+		document.getElementById('heading').innerHTML = "heading " + heading.magneticHeading;
+		document.getElementById('timestamp').innerHTML = "Timestamp: " + heading.timestamp;
+
+		document.getElementById('myImage').setAttribute('style', '-webkit-transform: rotate(' + (360 - heading.magneticHeading) + 'deg)');
+    };
+
 	
-	function onSuccess(acceleration) {
-		xAcceleration = acceleration.x;
-        yAcceleration = acceleration.y
+	function onError(error) {
+        alert('Accelerometer Error!' + error.code);
+    };
+} 
+
+function vibrate(t){
+	navigator.vibrate(t);
 }
+function checkConnection() {
+    var networkState = navigator.connection.type;
 
-	function onError() {
-		alert('onError!');
-	}
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.CELL]     = 'Cell generic connection';
+    states[Connection.NONE]     = 'No network connection';
 
-	var options = { frequency: 100 };  // Update every 100 miliseconds
-
-		var watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
-	}
-
-
-function draw() {
-	context.clearRect(0,0, 300,300);
-	context.beginPath();
-	context.fillStyle="#0000ff";
-	// Draws a circle of radius 20 at the coordinates 100,100 on the canvas
-	context.arc(x,y,20,0,Math.PI*2,true); 
-	context.closePath();
-	context.fill();
-	x += dx;
-	y += dy;
+    alert('Connection type: ' + states[networkState]);
 }
-
- 
-
-
-
-
+function takePicture () {
+	navigator.camera.getPicture(onSuccess, onFail, { quality: 50, destinationType: Camera.DestinationType.DATA_URL})
+	
+	function onSuccess(imageData) {
+		var image = document.getElementById('myImage');
+		image.src = "data:image/jpeg;base64," + imageData;
+		console.log('image updated');
+	}
+	
+	function onFail (message) {
+		console.log("image capture failed because " + message);
+	}
+}
